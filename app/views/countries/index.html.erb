@@ -1,0 +1,16 @@
+ <h1>Countries</h1>
+
+<div id="mapid"></div>
+
+<%= map(:center => {
+    :latlng => [51.505, -0.09],
+    :zoom => 13
+  },
+  :tile_layer => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  :max_zoom => 18,
+  :id => "myMap",
+  :container_id => "mapid",
+   )
+%>
+
+
