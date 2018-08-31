@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   get '/polygons', to: 'countries#polygons'
   get '/topo_world', to: 'countries#topo_world'
   get '/official_polygons', to: 'countries#official_polygons'
+  get '/included_countries', to: 'countries#included_countries'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
