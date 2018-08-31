@@ -51,16 +51,16 @@ d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
     dashboardCountries = JSON.parse(countries)
     dashboardCountryCodes = Object.keys(dashboardCountries).map(country => dashboardCountries[country].code)
     
-    isIncludedCountries = world.features.filter(feature => dashboardCountryCodes.includes(feature.properties.CNTRY_CODE))
+    isIncludedCountries = world.features.filter(feature => dashboardCountryCodes.includes(feature.properties.iso_alpha2))
     
     for (i = 0; i < isIncludedCountries.length; i++){
       isIncludedCountries[i].properties.fill_color = "#b1cbe2";
-      countryKey = Object.keys(dashboardCountries).filter(country => dashboardCountries[country].code === isIncludedCountries[i].properties.CNTRY_CODE)
+      countryKey = Object.keys(dashboardCountries).filter(country => dashboardCountries[country].code === isIncludedCountries[i].properties.iso_alpha2)
       isIncludedCountries[i].properties.slug = countryKey
       isIncludedCountries[i].properties.official_name = dashboardCountries[countryKey].name
     }
 
-    notIncludedCountries = world.features.filter(feature => !dashboardCountryCodes.includes(feature.properties.CNTRY_CODE))
+    notIncludedCountries = world.features.filter(feature => !dashboardCountryCodes.includes(feature.properties.iso_alpha2))
 
     for (i = 0; i < notIncludedCountries.length; i++){
       notIncludedCountries[i].properties.fill_color = "#fff";
@@ -74,7 +74,7 @@ d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
         .enter()
         .append("a")
           
-        .attr("xlink:href", function(d) {return "https://advise.devtechlab.com/country/" + d.properties.slug})
+        .attr("xlink:href", function(d) {if (d.properties.slug) return "https://advise.devtechlab.com/country/" + d.properties.slug})
           .append("path")
           .attr("class", "land")
           .attr("fill", function(d,i){
