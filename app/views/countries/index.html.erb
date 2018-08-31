@@ -57,6 +57,7 @@ d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
       isIncludedCountries[i].properties.fill_color = "#b1cbe2";
       countryKey = Object.keys(dashboardCountries).filter(country => dashboardCountries[country].code === isIncludedCountries[i].properties.CNTRY_CODE)
       isIncludedCountries[i].properties.slug = countryKey
+      isIncludedCountries[i].properties.official_name = dashboardCountries[countryKey].name
     }
 
     notIncludedCountries = world.features.filter(feature => !dashboardCountryCodes.includes(feature.properties.CNTRY_CODE))
@@ -72,6 +73,7 @@ d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
         .data(world.features)
         .enter()
         .append("a")
+          
         .attr("xlink:href", function(d) {return "https://advise.devtechlab.com/country/" + d.properties.slug})
           .append("path")
           .attr("class", "land")
@@ -79,7 +81,9 @@ d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
           return d.properties.fill_color
           })
           .attr("d", path)
-        
+          .append("svg:title")
+          .text(function(d,i){if(d.properties.official_name) return d.properties.official_name})
+          
         ;
 
        
