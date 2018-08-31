@@ -15,9 +15,6 @@ body {
   fill: #0067b9;
 }
 
-.land {
-  fill: #fff;
-}
 .boundary {
   fill: none;
   stroke: #fff;
@@ -47,16 +44,45 @@ svg.append("use")
     .attr("class", "fill")
     .attr("xlink:href", "#sphere");
 
+
 d3.json("http://localhost:3000/official_polygons.json", function(error, world) {
-	world = JSON.parse(world)
-  if (error) throw error;
+  d3.json("http://localhost:3000/included_countries.json", function(error, countries) {
+    world = JSON.parse(world)
+    dashboardCountries = JSON.parse(countries)
+    dashboardCountryCodes = Object.keys(dashboardCountries).map(country => dashboardCountries[country].code)
+    
+    isIncludedCountries = world.features.filter(feature => dashboardCountryCodes.includes(feature.properties.CNTRY_CODE))
+    
+    for (i = 0; i < isIncludedCountries.length; i++){
+      isIncludedCountries[i].properties.fill_color = "#b1cbe2";
+      countryKey = Object.keys(dashboardCountries).filter(country => dashboardCountries[country].code === isIncludedCountries[i].properties.CNTRY_CODE)
+      isIncludedCountries[i].properties.slug = countryKey
+    }
 
-    svg.selectAll("path")
-      .data(world.features)
-      .enter()
-      .append("path")
-      .attr("class", "land")
-      .attr("d", path);
+    notIncludedCountries = world.features.filter(feature => !dashboardCountryCodes.includes(feature.properties.CNTRY_CODE))
 
+    for (i = 0; i < notIncludedCountries.length; i++){
+      notIncludedCountries[i].properties.fill_color = "#fff";
+    }
+
+
+    if (error) throw error;
+
+      svg.selectAll("path")
+        .data(world.features)
+        .enter()
+        .append("a")
+        .attr("xlink:href", function(d) {return "https://advise.devtechlab.com/country/" + d.properties.slug})
+          .append("path")
+          .attr("class", "land")
+          .attr("fill", function(d,i){
+          return d.properties.fill_color
+          })
+          .attr("d", path)
+        
+        ;
+
+       
+  });
 });
 </script>

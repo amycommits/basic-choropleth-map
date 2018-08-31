@@ -28,6 +28,13 @@ class CountriesController < ApplicationController
     end
   end
 
+  def included_countries
+    @world = IO.read("#{Rails.root}/public/countries.json")
+    respond_to do |format|
+      format.json { render json: @world.to_json}
+    end
+  end
+
   def polygons
     @usaData = IO.read("#{Rails.root}/public/usa-example.json")
     respond_to do |format|
