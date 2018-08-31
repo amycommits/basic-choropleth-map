@@ -1,17 +1,44 @@
+require 'csv'
 class CountriesController < ApplicationController
   before_action :set_country, only: [:show, :edit, :update, :destroy]
 
   # GET /countries
   # GET /countries.json
   def index
-    @data = IO.read("#{Rails.root}/public/gbl_polygons.json")
-    @countries = Country.all
   end
 
+  def country_list
+    @country_list = Country.all.map(&:name)
+    respond_to do |format|
+      format.csv { send_data @country_list}
+      
+    end
+  end
+  def topo_world
+    @usaData = IO.read("#{Rails.root}/public/topo.world.json")
+    respond_to do |format|
+      format.json { render json: @usaData.to_json}
+    end
+  end
+
+  def official_polygons
+    @world = IO.read("#{Rails.root}/public/simp.json")
+    respond_to do |format|
+      format.json { render json: @world.to_json}
+    end
+  end
+
+  def polygons
+    @usaData = IO.read("#{Rails.root}/public/usa-example.json")
+    respond_to do |format|
+      format.json { render json: @usaData.to_json}
+    end
+  end
   # GET /countries/1
   # GET /countries/1.json
   def show
   end
+
 
   # GET /countries/new
   def new
